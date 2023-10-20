@@ -1,0 +1,8 @@
+name: crawl-test-1
+collection: configtest
+seeds:
+  - https://webrecorder.net/
+  - https://specs.webrecorder.net/
+
+generateWACZ: true
+

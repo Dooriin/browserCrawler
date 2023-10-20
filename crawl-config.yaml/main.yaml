@@ -1,0 +1,10 @@
+seeds:
+  - url: https://www.moodys.com
+    include: moodys.com/web/
+    host: "https://www.moodys.com/"
+    prefix: '/web/'
+    exclude:
+      - www.facebook.com
+      - www.linkedin.com
+      - twitter.com
+      - www.google.com
