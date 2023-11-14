@@ -26,6 +26,7 @@ export class PageState
 {
   constructor(redisData) {
     this.url = redisData.url;
+    this.refererUrl = redisData.refererUrl;
     this.seedId = redisData.seedId;
     this.depth = redisData.depth;
     this.extraHops = redisData.extraHops;
@@ -254,9 +255,9 @@ return 0;
     return (res >= 3);
   }
 
-  async addToQueue({url, seedId, depth = 0, extraHops = 0} = {}, limit = 0) {
+  async addToQueue({url, seedId, depth = 0, extraHops = 0, refererUrl = ""} = {}, limit = 0) {
     const added = this._timestamp();
-    const data = {added, url, seedId, depth};
+    const data = {added, url, seedId, depth, refererUrl};
     if (extraHops) {
       data.extraHops = extraHops;
     }

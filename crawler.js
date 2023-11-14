@@ -1287,13 +1287,13 @@ self.__bx_behaviors.selectMainBehavior();
     }
 
     if (links.length) {
-      promiseList.push(this.queueInScopeUrls(seedId, links, depth, extraHops, logDetails));
+      promiseList.push(this.queueInScopeUrls(seedId, links, depth, extraHops, logDetails, page.url()));
     }
 
     await Promise.allSettled(promiseList);
   }
 
-  async queueInScopeUrls(seedId, urls, depth, extraHops = 0, logDetails = {}) {
+  async queueInScopeUrls(seedId, urls, depth, extraHops = 0, logDetails = {}, refererUrl = "") {
     try {
       depth += 1;
 
@@ -1310,7 +1310,7 @@ self.__bx_behaviors.selectMainBehavior();
         const {url, isOOS} = res;
 
         if (url) {
-          await this.queueUrl(seedId, url, depth, isOOS ? newExtraHops : extraHops, logDetails);
+          await this.queueUrl(seedId, url, depth, isOOS ? newExtraHops : extraHops, logDetails, refererUrl);
         }
       }
     } catch (e) {
@@ -1331,12 +1331,12 @@ self.__bx_behaviors.selectMainBehavior();
     }
   }
 
-  async queueUrl(seedId, url, depth, extraHops, logDetails = {}) {
+  async queueUrl(seedId, url, depth, extraHops, logDetails = {}, refererUrl = '') {
     if (this.limitHit) {
       return false;
     }
 
-    const result = await this.crawlState.addToQueue({url, seedId, depth, extraHops}, this.pageLimit);
+    const result = await this.crawlState.addToQueue({url, seedId, depth, extraHops, refererUrl}, this.pageLimit);
 
     switch (result) {
     case QueueState.ADDED:
@@ -1386,9 +1386,9 @@ self.__bx_behaviors.selectMainBehavior();
     }
   }
 
-  async writePage({url, depth, title, text, loadState, favicon, statusCode}) {
+  async writePage({url, depth, title, text, loadState, favicon, statusCode, refererUrl}) {
     const id = uuidv4();
-    const row = {id, statusCode, url, title, loadState};
+    const row = {id, statusCode, refererUrl, url, title, loadState};
 
     if (depth === 0) {
       row.seed = true;
