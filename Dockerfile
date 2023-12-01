@@ -55,6 +55,7 @@ RUN mkdir -p /tmp/ads && cd /tmp/ads && \
 
 RUN yarn install --network-timeout 1000000
 
+ADD *.cjs /app/
 ADD *.js /app/
 ADD util/*.js /app/util/
 

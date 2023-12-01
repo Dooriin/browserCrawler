@@ -17,6 +17,15 @@ VOLUME_GID=$(stat -c '%g' /crawls)
 MY_UID=$(id -u)
 MY_GID=$(id -g)
 
+# Function to run the crawler and post processing
+run_crawler_and_post_process() {
+    # Run the crawler command
+    crawl "$@"
+
+    # After crawler finishes, run the post processing script
+    node /app/post_crawl_processing.cjs
+}
+
 # If we aren't running as the owner of the /crawls/ dir then add a new user
 # btrix with the same UID/GID of the /crawls dir and run as that user instead.
 if [ "$MY_GID" != "$VOLUME_GID" ] || [ "$MY_UID" != "$VOLUME_UID" ]; then
@@ -26,7 +35,8 @@ if [ "$MY_GID" != "$VOLUME_GID" ] || [ "$MY_UID" != "$VOLUME_UID" ]; then
     useradd -ms /bin/bash -g $VOLUME_GID btrix
     usermod -o -u $VOLUME_UID btrix > /dev/null
 
-    su btrix -c '"$@"' -- argv0-ignore "$@"
+    su btrix -c 'run_crawler_and_post_process "$@"' -- argv0-ignore "$@"
 else
-    exec "$@"
+    # Directly run the crawler and post processing
+    run_crawler_and_post_process "$@"
 fi

@@ -1331,7 +1331,7 @@ self.__bx_behaviors.selectMainBehavior();
     }
   }
 
-  async queueUrl(seedId, url, depth, extraHops, logDetails = {}, refererUrl = '') {
+  async queueUrl(seedId, url, depth, extraHops, logDetails = {}, refererUrl = "") {
     if (this.limitHit) {
       return false;
     }
